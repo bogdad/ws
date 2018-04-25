@@ -28,7 +28,7 @@ func main() {
 	}
 	rootCmd.Flags().StringVarP(&options.origin, "origin", "o", "", "websocket origin")
 	rootCmd.Flags().BoolVarP(&options.printVersion, "version", "v", false, "print version")
-	rootCmd.Flags().BoolVarP(&options.authHeader, "auth_header", "v", false, "set the auth header")
+	rootCmd.Flags().StringVarP(&options.authHeader, "auth_header", "a", "", "auth header")
 
 	rootCmd.Execute()
 }
@@ -63,13 +63,19 @@ func root(cmd *cobra.Command, args []string) {
 		origin = originURL.String()
 	}
 
+	var authHeader string
+	authHeader = ""
+	if options.authHeader != "" {
+		authHeader = options.authHeader
+	}
+
 	var historyFile string
 	user, err := user.Current()
 	if err == nil {
 		historyFile = filepath.Join(user.HomeDir, ".ws_history")
 	}
 
-	err = connect(dest.String(), origin, auth_header, &readline.Config{
+	err = connect(dest.String(), origin, authHeader, &readline.Config{
 		Prompt:      "> ",
 		HistoryFile: historyFile,
 	})

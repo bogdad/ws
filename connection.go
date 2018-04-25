@@ -20,7 +20,9 @@ type session struct {
 func connect(url, origin string, authHeader string, rlConf *readline.Config) error {
 	headers := make(http.Header)
 	headers.Add("Origin", origin)
-	headers.Add("Authorization", authHeader)
+	if authHeader != "" {
+		headers.Add("Authorization", authHeader)
+	}
 
 	ws, _, err := websocket.DefaultDialer.Dial(url, headers)
 	if err != nil {
