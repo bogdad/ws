@@ -17,6 +17,7 @@ const Version = "0.2.1"
 var options struct {
 	origin       string
 	printVersion bool
+	authHeader   string
 }
 
 func main() {
@@ -27,6 +28,7 @@ func main() {
 	}
 	rootCmd.Flags().StringVarP(&options.origin, "origin", "o", "", "websocket origin")
 	rootCmd.Flags().BoolVarP(&options.printVersion, "version", "v", false, "print version")
+	rootCmd.Flags().BoolVarP(&options.authHeader, "auth_header", "v", false, "set the auth header")
 
 	rootCmd.Execute()
 }
@@ -67,7 +69,7 @@ func root(cmd *cobra.Command, args []string) {
 		historyFile = filepath.Join(user.HomeDir, ".ws_history")
 	}
 
-	err = connect(dest.String(), origin, &readline.Config{
+	err = connect(dest.String(), origin, auth_header, &readline.Config{
 		Prompt:      "> ",
 		HistoryFile: historyFile,
 	})
